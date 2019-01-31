@@ -52,20 +52,6 @@ def appendColor(path: str, item: str, color: bool = False) -> str:
     return colorCode + item + endCode + indicator
 
 
-def main() -> None:
-    paths = get_stdout()
-
-    if paths is None:
-        return
-
-    color = True
-    currentDir = os.path.split(os.getcwd())
-    print(appendColor(currentDir[0], currentDir[1], color))
-    group = grouping(paths)
-
-    displayItems(group, ".", "", color)
-
-
 def get_stdout() -> Optional[List[str]]:
     cmd = "git ls-files"
     p = subprocess.Popen(
@@ -79,6 +65,15 @@ def get_stdout() -> Optional[List[str]]:
         return None
 
     return [item.decode("utf-8") for item in stdout_data]
+
+
+def main() -> None:
+    color = True
+    paths = get_stdout()
+
+    if paths is not None:
+        group = grouping(paths)
+        displayItems(group, ".", "", color)
 
 
 if __name__ == "__main__":

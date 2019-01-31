@@ -1,12 +1,17 @@
 import unittest
 import subprocess
+from typing import Dict, Any
 from gitTree.gitTree import grouping, displayItems, appendColor, get_stdout
 
 
 class TestGitTree(unittest.TestCase):
     def test_grouping(self) -> None:
-        res = get_stdout()
-        print(res)
+        case = ["a", "a/p", "a/p/x", "a/p/y", "a/q/z", "a/q/w"]
+        actual = grouping(case)
+        expected: Dict[str, Any] = {
+            "a": {"p": {"x": {}, "y": {}}, "q": {"z": {}, "w": {}}}
+        }
+        self.assertEqual(actual, expected)
 
     def test_main(self) -> None:
         cmd = "git ls-files"

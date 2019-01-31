@@ -6,7 +6,7 @@ setup(
     author="Kazufumi Onuma",
     author_email="k.o.system2@gmail.com",
     license="MIT License",
-    url="https://github.com/kosystem/gitTree",
+    url="https://github.com/jujunjun110/gitTree",
     version="0.1",
     packages=find_packages(),
     entry_points={"console_scripts": ["git-tree=gitTree.gitTree:main"]},
