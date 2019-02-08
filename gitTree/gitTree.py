@@ -10,6 +10,13 @@ C_BLUE = "\033[94m"
 C_END = "\033[00m"
 
 
+# def grouping(fileList: List[str]) -> Any:
+#     for path in fileList:
+#         items = path.split("/")
+#         bottom = items[-1]
+#         dirs = items[0:-1]
+
+
 def grouping(fileList: List[str]) -> Any:
     root: Dict[str, Any] = {}
     for path in fileList:
@@ -21,6 +28,7 @@ def grouping(fileList: List[str]) -> Any:
 
 
 def displayItems(items: Any, path: str, prefix: str, color: bool) -> Any:
+
     for index, item in enumerate(sorted(items.keys())):
         if index == len(items) - 1:
             print(prefix + "└── " + appendColor(path, item, color))
@@ -35,21 +43,21 @@ def displayItems(items: Any, path: str, prefix: str, color: bool) -> Any:
 
 def appendColor(path: str, item: str, color: bool = False) -> str:
     filepath = os.path.join(path, item)
-    colorCode = ""
-    endCode = C_END if color else ""
-    indicator = ""
-    if color:
-        if os.path.isdir(filepath):
-            colorCode = C_BLUE
-        elif os.access(filepath, os.X_OK):
-            colorCode = C_GREEN
-        else:
-            colorCode = C_END
+    indicator = "/" if os.path.isdir(filepath) else ""
 
+    if not color:
+        return item + indicator
+
+    return get_color(filepath) + item + C_END + indicator
+
+
+def get_color(filepath: str) -> str:
     if os.path.isdir(filepath):
-        indicator = "/"
+        return C_BLUE
+    elif os.access(filepath, os.X_OK):
+        return C_GREEN
 
-    return colorCode + item + endCode + indicator
+    return C_END
 
 
 def get_stdout() -> Optional[List[str]]:
@@ -71,9 +79,11 @@ def main() -> None:
     color = True
     paths = get_stdout()
 
-    if paths is not None:
-        group = grouping(paths)
-        displayItems(group, ".", "", color)
+    if paths is None:
+        return
+
+    group = grouping(paths)
+    displayItems(group, ".", "", color)
 
 
 if __name__ == "__main__":
